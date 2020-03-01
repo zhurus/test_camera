@@ -53,14 +53,14 @@ int main(int argc, char** argv)
 //    //Creation of dbus connection
 //    dbusClient client(bus);
 
-//    //Camera creation
-//    ICamera *ptr = new RTSPCamera(url);
+    //Camera creation
+    ICamera *ptr = new RTSPCamera(url);
 
-//    //start camera main cycle
-//    auto fut = std::async(std::launch::async,[ptr](){(ptr)->Start();});
+    //start camera main cycle
+    auto fut = std::async(std::launch::async,[ptr](){(ptr)->Start();});
 
-//    //create camera dbus object
-//    Camera cam(ptr);
+    //create camera dbus object
+    Camera cam(ptr);
 
 //    guint owner_id;
 //    GMainLoop *loop;

@@ -24,10 +24,14 @@ add_definitions(${GTK3_CFLAGS_OTHER})
 find_package(Boost 1.65.0 REQUIRED program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 
+find_package(OpenCV REQUIRED)
+find_package(Threads REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
 	${GTK3_LIBRARIES}
 	${Boost_LIBRARIES}
+	${OpenCV_LIBS}
+	Threads::Threads
 	)
