@@ -48,6 +48,7 @@ void ICamera::setCurrentFrameInfo(const CurrentFrameInfo &currentFrameInfo)
 {
     Stop();
     currentFrameInfo_ = currentFrameInfo;
+    isPropsReady = true;
     Start();
 }
 

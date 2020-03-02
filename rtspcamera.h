@@ -6,6 +6,8 @@
 #include <string>
 
 
+#define DEFAULT_PIXELFORMAT 8
+#define DEFAULT_CHANNELS 3
 
 
 class RTSPCamera: public ICamera
@@ -22,7 +24,7 @@ public:
 
 private:
     std::string m_url;
-    std::string m_recvFilename;
+    std::string m_recvFilename;     // output filename
 };
 
 #endif // RTSPCAMERA_H

@@ -58,3 +58,49 @@ CameraDbusInterface Camera::getInterface()
 {
     return interface;
 }
+
+void Camera::setHeight(const int height)
+{
+    auto fi = camera->currentFrameInfo();
+    fi.frameInfo.Height = height;
+    camera->setCurrentFrameInfo(fi);
+}
+
+void Camera::setWeight(const int width)
+{
+    auto fi = camera->currentFrameInfo();
+    fi.frameInfo.Width = width;
+    camera->setCurrentFrameInfo(fi);
+}
+
+void Camera::setChannels(const int channels)
+{
+    auto fi = camera->currentFrameInfo();
+    fi.frameInfo.Channels = channels;
+    camera->setCurrentFrameInfo(fi);
+}
+
+int Camera::getPixelFormat() const
+{
+    return camera->currentFrameInfo().frameInfo.PixelFormat;
+}
+
+std::string Camera::getName() const
+{
+    return camera->getCameraInfo().name;
+}
+
+std::string Camera::getVendor() const
+{
+    return camera->getCameraInfo().vendor;
+}
+
+std::string Camera::getType() const
+{
+    return camera->getCameraInfo().type;
+}
+
+int Camera::getSMID() const
+{
+    return camera->getCameraInfo().shmid;
+}

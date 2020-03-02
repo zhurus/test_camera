@@ -51,10 +51,23 @@ public:
                         gpointer               user_data);
 
 
+
     static CameraDbusInterface getInterface();
     static GDBusInterfaceVTable interface_vtable ;
     static CameraDbusInterface interface;
     static GDBusInterfaceInfo *cameraInterface;
+
+    void setHeight(const int height);
+    void setWeight(const int width);
+    void setChannels(const int channels);
+
+    int getPixelFormat()const;
+    std::string getName()const;
+    std::string getVendor()const;
+    std::string getType()const;
+    int getSMID()const;
+
+
 private:
     static ICamera* camera;
 

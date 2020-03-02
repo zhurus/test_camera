@@ -17,29 +17,38 @@ void RTSPCamera::Start()
 {
     using namespace cv;
 
+    isStarted.store(true);
+    unsetStopFlag();
+
     VideoCapture cap;
     if(!cap.open(m_url))
         throw std::runtime_error("RTSPCamera::Start: Failed to connect input video");
 
-    double frame_width = cap.get(CAP_PROP_FRAME_WIDTH);
-    double frame_height = cap.get(CAP_PROP_FRAME_HEIGHT);
+    int frame_width = isPropsReady?     currentFrameInfo_.frameInfo.Width   :   cap.get(CAP_PROP_FRAME_WIDTH);
+    int frame_height = isPropsReady?    currentFrameInfo_.frameInfo.Width   :   cap.get(CAP_PROP_FRAME_WIDTH);
     double fps = cap.get(CAP_PROP_FPS);
 
+
     VideoWriter writer(
-                    m_recvFilename,           // output filename
-                    writer.fourcc('A','V','C','1'), // FFMPEG Codec
+                    m_recvFilename,
+                    writer.fourcc('H','2','6','4'), // FFMPEG Codec
                     fps,
                     Size2d(frame_width,frame_height)
                 );
 
-    // Reading input and recording to output
-    Mat frame;
     while(true) {
-        Mat frame;
-        if(!cap.read(frame))
+        std::unique_lock<std::mutex> lock(mtx);
+        if(stopFlag)
+            condition.wait(lock);
+
+        Mat frame(Size2i(frame_width,frame_height),
+                  CV_MAKETYPE(isPropsReady? currentFrameInfo_.frameInfo.PixelFormat :   DEFAULT_PIXELFORMAT,
+                              isPropsReady? currentFrameInfo_.frameInfo.Channels    :   DEFAULT_CHANNELS));
+        if(!cap.read(frame))    // nothing to read
             break;
         writer.write(frame);
     }
+
     cap.release();
     writer.release();
 }
