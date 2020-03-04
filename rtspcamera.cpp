@@ -24,10 +24,13 @@ void RTSPCamera::Start()
     if(!cap.open(m_url))
         throw std::runtime_error("RTSPCamera::Start: Failed to connect input video");
 
-    int frame_width = isPropsReady?     currentFrameInfo_.frameInfo.Width   :   cap.get(CAP_PROP_FRAME_WIDTH);
-    int frame_height = isPropsReady?    currentFrameInfo_.frameInfo.Width   :   cap.get(CAP_PROP_FRAME_WIDTH);
+    int frame_width = currentFrameInfo_.frameInfo.Width;
+    if(!frame_width)
+        frame_width = cap.get(CAP_PROP_FRAME_WIDTH);
+    int frame_height = currentFrameInfo_.frameInfo.Width;
+    if(!frame_height)
+        frame_height = cap.get(CAP_PROP_FRAME_HEIGHT);
     double fps = cap.get(CAP_PROP_FPS);
-
 
     VideoWriter writer(
                     m_recvFilename,
@@ -41,9 +44,9 @@ void RTSPCamera::Start()
         if(stopFlag)
             condition.wait(lock);
 
-        Mat frame(Size2i(frame_width,frame_height),
-                  CV_MAKETYPE(isPropsReady? currentFrameInfo_.frameInfo.PixelFormat :   DEFAULT_PIXELFORMAT,
-                              isPropsReady? currentFrameInfo_.frameInfo.Channels    :   DEFAULT_CHANNELS));
+        Mat frame(Size(frame_width,frame_height),
+                  CV_MAKETYPE(currentFrameInfo_.frameInfo.PixelFormat,
+                              currentFrameInfo_.frameInfo.Channels));
         if(!cap.read(frame))    // nothing to read
             break;
         writer.write(frame);

@@ -67,7 +67,6 @@ public:
     std::string getType()const;
     int getSMID()const;
 
-
 private:
     static ICamera* camera;
 
